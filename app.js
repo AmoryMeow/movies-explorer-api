@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 
 const { PORT = 3000 } = process.env;
@@ -13,6 +14,9 @@ mongoose.connect('mongodb://localhost:27017/moviedb',
     useFindAndModify: false,
     useUnifiedTopology: true,
   });
+
+app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
+app.use(bodyParser.json()); // parse application/json
 
 app.use('/users', usersRouter);
 
