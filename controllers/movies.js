@@ -42,4 +42,20 @@ const createMovei = (req, res, next) => {
     });
 };
 
-module.exports = { getMoveis, createMovei };
+const deleteMovieById = (req, res, next) => {
+  const { movieId } = req.params;
+  movieModel.findById(movieId).select('+owner')
+    .then((movie) => {
+      if (!movie) {
+        res.status(404).send('Фильм не найден');
+      }
+      if (movie.owner.toString() !== req.user._id) {
+        res.status(409).send('Недостаточно прав');
+      }
+      movieModel.findByIdAndRemove(movieId)
+        .then((data) => res.status(200).send(data));
+    })
+    .catch(next);
+};
+
+module.exports = { getMoveis, createMovei, deleteMovieById };
