@@ -1,7 +1,8 @@
 const router = require('express').Router();
 
-const { getMoveis } = require('../controllers/movies');
+const { getMoveis, createMovei } = require('../controllers/movies');
 
 router.get('/', getMoveis);
+router.post('/', createMovei);
 
 module.exports = router;
