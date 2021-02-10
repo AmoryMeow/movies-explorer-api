@@ -37,9 +37,7 @@ const createMovei = (req, res, next) => {
       nameRU: movie.nameRU,
       nameEN: movie.nameEN,
     }))
-    .catch((err) => {
-      res.send(err);
-    });
+    .catch(next);
 };
 
 const deleteMovieById = (req, res, next) => {
