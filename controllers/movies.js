@@ -8,7 +8,17 @@ const getMoveis = (req, res, next) => {
 
 const createMovei = (req, res, next) => {
   const {
-    country, director, duration, year, description, image, trailer, thumbnail, nameRU, nameEN,
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
   } = req.body;
   const owner = req.user._id;
 
@@ -21,6 +31,7 @@ const createMovei = (req, res, next) => {
     image,
     trailer,
     thumbnail,
+    movieId,
     nameRU,
     nameEN,
     owner,
@@ -34,6 +45,7 @@ const createMovei = (req, res, next) => {
       image: movie.image,
       trailer: movie.trailer,
       thumbnail: movie.thumbnail,
+      movieId: movie.movieId,
       nameRU: movie.nameRU,
       nameEN: movie.nameEN,
     }))
