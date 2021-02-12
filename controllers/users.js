@@ -1,7 +1,9 @@
+const bcrypt = require('bcryptjs');
 const userModel = require('../models/user');
 
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
+const ConflictErr = require('../errors/conflict-err');
 
 const getUsers = (req, res, next) => {
   userModel.find({})
@@ -47,4 +49,36 @@ const updateCurrentUser = (req, res, next) => {
     });
 };
 
-module.exports = { getUsers, getCurrentUser, updateCurrentUser };
+// создаёт пользователя с переданными в теле email, password и name
+const createUser = (req, res, next) => {
+  const {
+    email, password, name,
+  } = req.body;
+
+  if (!email || !password || !name) {
+    throw new BadRequestError('Переданы некорректные данные');
+  }
+
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      userModel.create({ email, name, password: hash })
+        .then((data) => {
+          res.status(200).send({ email: data.email, name: data.name });
+        })
+        .catch((err) => {
+          if (err.name === 'MongoError' && err.code === 11000) {
+            throw new ConflictErr('Пользователь с указанным email уже существует');
+          }
+          if (err.kind === 'ObjectId' || err.kind === 'CastError') {
+            throw new BadRequestError('Переданы некорректные данные');
+          } else {
+            next(err);
+          }
+        })
+        .catch(next);
+    });
+};
+
+module.exports = {
+  getUsers, getCurrentUser, updateCurrentUser, createUser,
+};
