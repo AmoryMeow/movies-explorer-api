@@ -1,5 +1,9 @@
 const movieModel = require('../models/movie');
 
+const NotFoundError = require('../errors/not-found-err');
+const ConflictErr = require('../errors/conflict-err');
+const BadRequestError = require('../errors/bad-request-err');
+
 const getMoveis = (req, res, next) => {
   movieModel.find({})
     .then((data) => res.status(200).send(data))
@@ -49,7 +53,13 @@ const createMovei = (req, res, next) => {
       nameRU: movie.nameRU,
       nameEN: movie.nameEN,
     }))
-    .catch(next);
+    .catch((err) => {
+      if (err.kind === 'ObjectId' || err.kind === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const deleteMovieById = (req, res, next) => {
@@ -57,15 +67,21 @@ const deleteMovieById = (req, res, next) => {
   movieModel.findById(movieId).select('+owner')
     .then((movie) => {
       if (!movie) {
-        res.status(404).send('Фильм не найден');
+        throw new NotFoundError('Фильм не найден');
       }
       if (movie.owner.toString() !== req.user._id) {
-        res.status(409).send('Недостаточно прав');
+        throw new ConflictErr('Недостаточно прав');
       }
       movieModel.findByIdAndRemove(movieId)
         .then((data) => res.status(200).send(data));
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.kind === 'ObjectId' || err.kind === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports = { getMoveis, createMovei, deleteMovieById };

@@ -4,27 +4,27 @@ const validator = require('validator');
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено'],
   },
   director: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено'],
   },
   duration: {
     type: Number,
-    required: true,
+    required: [true, 'Поле должно быть заполнено'],
   },
   year: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено'],
   },
   description: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено'],
   },
   image: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено'],
     validate: {
       validator(v) {
         return validator.isURL(v);
@@ -34,7 +34,7 @@ const movieSchema = new mongoose.Schema({
   },
   trailer: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено'],
     validate: {
       validator(v) {
         return validator.isURL(v);
@@ -44,7 +44,7 @@ const movieSchema = new mongoose.Schema({
   },
   thumbnail: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено'],
     validate: {
       validator(v) {
         return validator.isURL(v);
@@ -59,15 +59,15 @@ const movieSchema = new mongoose.Schema({
   },
   movieId: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено'],
   },
   nameRU: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено'],
   },
   nameEN: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено'],
   },
 });
 
