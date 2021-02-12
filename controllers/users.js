@@ -1,5 +1,8 @@
 const userModel = require('../models/user');
 
+const NotFoundError = require('../errors/not-found-err');
+const BadRequestError = require('../errors/bad-request-err');
+
 const getUsers = (req, res, next) => {
   userModel.find({})
     .then((data) => res.status(200).send(data))
@@ -8,28 +11,40 @@ const getUsers = (req, res, next) => {
 
 // возвращает информацию о пользователе (email и имя)
 const getCurrentUser = (req, res, next) => {
-  const userId = req.body._id;
+  const userId = req.user._id;
   userModel.findById(userId)
     .orFail(() => {
-      res.status(404).send({ message: 'Пользователь не найден' });
+      throw new NotFoundError('Пользователь не найден');
     })
     .then((data) => res.status(200).send(data))
-    .catch(next);
+    .catch((err) => {
+      if (err.kind === 'ObjectId' || err.kind === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 // обновляет информацию о пользователе (email и имя)
 const updateCurrentUser = (req, res, next) => {
-  const userId = req.body._id;
+  const userId = req.user._id;
   const { email, name } = req.body;
   if (!email || !name) {
-    res.status(400).send('Переданы некорректные данные');
+    throw new BadRequestError('Переданы некорректные данные');
   }
   userModel.findByIdAndUpdate(userId, { email, name }, { new: true })
     .orFail(() => {
-      res.status(404).send({ message: 'Пользователь не найден' });
+      throw new NotFoundError('Пользователь не найден');
     })
     .then((data) => res.status(200).send(data))
-    .catch(next);
+    .catch((err) => {
+      if (err.kind === 'ObjectId' || err.kind === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports = { getUsers, getCurrentUser, updateCurrentUser };
