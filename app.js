@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
+const cors = require('cors');
 
 const { requestLogger, errorLogger } = require('./middleware/logger');
 const routes = require('./routes/index');
@@ -25,6 +26,8 @@ mongoose.connect(MONGO_URL,
     useFindAndModify: false,
     useUnifiedTopology: true,
   });
+
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // parse application/json
