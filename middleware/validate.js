@@ -52,13 +52,50 @@ const checkBodyUser = celebrate({
         'string.max': 'Длина поля name должна быть менее 30 символов',
         'any.required': 'Поле name должно быть заполнено',
       }),
-    email: Joi.string().required().custom((value, helpers) => {
-      if (validator.isEmail(value)) {
-        return value;
-      }
-      return helpers.message('Некорректный email');
-    }),
+    email: Joi.string().required()
+      .email().message('Некорректный email')
+      .messages({
+        'any.required': 'Поле email должно быть заполнено',
+      }),
   }),
 });
 
-module.exports = { checkMovieId, checkBodyMovie, checkBodyUser };
+const checkBodySignup = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'string.min': 'Длина поля name должна быть больше 2 символов',
+        'string.max': 'Длина поля name должна быть менее 30 символов',
+        'any.required': 'Поле name должно быть заполнено',
+      }),
+    email: Joi.string().required()
+      .email().message('Некорректный email')
+      .messages({
+        'any.required': 'Поле email должно быть заполнено',
+      }),
+    password: Joi.string().required().min(5)
+      .messages({
+        'string.min': 'Длина поля password должна быть больше 5 символов',
+        'any.required': 'Поле password должно быть заполнено',
+      }),
+  }),
+});
+
+const checkBodySignin = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required()
+      .email().message('Некорректный email')
+      .messages({
+        'any.required': 'Поле email должно быть заполнено',
+      }),
+    password: Joi.string().required().min(5)
+      .messages({
+        'string.min': 'Длина поля password должна быть больше 5 символов',
+        'any.required': 'Поле password должно быть заполнено',
+      }),
+  }),
+});
+
+module.exports = {
+  checkMovieId, checkBodyMovie, checkBodyUser, checkBodySignup, checkBodySignin,
+};

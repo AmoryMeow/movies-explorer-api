@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Поле должно быть заполнено'],
+    minlength: [5, 'Длина поля должна быть больше 5 символов'],
     select: false,
   },
   name: {
