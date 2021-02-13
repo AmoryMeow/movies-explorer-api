@@ -1,9 +1,12 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const userModel = require('../models/user');
 
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const ConflictErr = require('../errors/conflict-err');
+
+const { JWT_SECRET } = require('../config');
 
 const getUsers = (req, res, next) => {
   userModel.find({})
@@ -79,6 +82,22 @@ const createUser = (req, res, next) => {
     });
 };
 
+// проверяет переданные в теле почту и пароль и возвращает JWT
+const loginUser = (req, res, next) => {
+  const { email, password } = req.body;
+
+  return userModel.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        JWT_SECRET,
+        { expiresIn: '7d' },
+      );
+      res.send({ token });
+    })
+    .catch(next);
+};
+
 module.exports = {
-  getUsers, getCurrentUser, updateCurrentUser, createUser,
+  getUsers, getCurrentUser, updateCurrentUser, createUser, loginUser,
 };
