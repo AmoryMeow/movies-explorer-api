@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 
 const { requestLogger, errorLogger } = require('./middleware/logger');
 const routes = require('./routes/index');
@@ -26,6 +27,7 @@ app.use(requestLogger);
 app.use(routes);
 
 app.use(errorLogger);
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT, () => {
