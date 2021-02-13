@@ -4,32 +4,68 @@ const mongoose = require('mongoose');
 
 const checkBodyMovie = celebrate({
   body: Joi.object().keys({
-    country: Joi.string().required(),
-    director: Joi.string().required(),
-    duration: Joi.number().required(),
-    year: Joi.string().required(),
-    description: Joi.string().required(),
-    image: Joi.string().required().custom((value, helpers) => {
-      if (validator.isURL(value)) {
-        return value;
-      }
-      return helpers.message('Некорректная ссылка');
-    }),
-    trailer: Joi.string().required().custom((value, helpers) => {
-      if (validator.isURL(value)) {
-        return value;
-      }
-      return helpers.message('Некорректная ссылка');
-    }),
-    thumbnail: Joi.string().required().custom((value, helpers) => {
-      if (validator.isURL(value)) {
-        return value;
-      }
-      return helpers.message('Некорректная ссылка');
-    }),
-    movieId: Joi.number().required(),
-    nameRU: Joi.string().required(),
-    nameEN: Joi.string().required(),
+    country: Joi.string().required()
+      .messages({
+        'any.required': 'Поле country должно быть заполнено',
+      }),
+    director: Joi.string().required()
+      .messages({
+        'any.required': 'Поле director должно быть заполнено',
+      }),
+    duration: Joi.number().required()
+      .messages({
+        'any.required': 'Поле duration должно быть заполнено',
+      }),
+    year: Joi.string().required()
+      .messages({
+        'any.required': 'Поле year должно быть заполнено',
+      }),
+    description: Joi.string().required()
+      .messages({
+        'any.required': 'Поле description должно быть заполнено',
+      }),
+    image: Joi.string().required()
+      .messages({
+        'any.required': 'Поле image должно быть заполнено',
+      })
+      .custom((value, helpers) => {
+        if (validator.isURL(value)) {
+          return value;
+        }
+        return helpers.message('Некорректная ссылка');
+      }),
+    trailer: Joi.string().required()
+      .messages({
+        'any.required': 'Поле trailer должно быть заполнено',
+      })
+      .custom((value, helpers) => {
+        if (validator.isURL(value)) {
+          return value;
+        }
+        return helpers.message('Некорректная ссылка');
+      }),
+    thumbnail: Joi.string().required()
+      .messages({
+        'any.required': 'Поле thumbnail должно быть заполнено',
+      })
+      .custom((value, helpers) => {
+        if (validator.isURL(value)) {
+          return value;
+        }
+        return helpers.message('Некорректная ссылка');
+      }),
+    movieId: Joi.number().required()
+      .messages({
+        'any.required': 'Поле movieId должно быть заполнено',
+      }),
+    nameRU: Joi.string().required()
+      .messages({
+        'any.required': 'Поле nameRU должно быть заполнено',
+      }),
+    nameEN: Joi.string().required()
+      .messages({
+        'any.required': 'Поле nameEN должно быть заполнено',
+      }),
   }),
 });
 
