@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+const helmet = require("helmet");
 
 const { requestLogger, errorLogger } = require('./middleware/logger');
 const routes = require('./routes/index');
@@ -10,6 +11,7 @@ const errorHandler = require('./middleware/errorHandler');
 const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/moviedb' } = process.env;
 
 const app = express();
+app.use(helmet());
 
 mongoose.connect(MONGO_URL,
   {
