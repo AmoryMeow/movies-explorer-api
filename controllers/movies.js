@@ -3,6 +3,7 @@ const movieModel = require('../models/movie');
 const NotFoundError = require('../errors/not-found-err');
 const Forbidden = require('../errors/forbidden-err');
 const BadRequestError = require('../errors/bad-request-err');
+const { errorMessages } = require('../constants');
 
 const getMoveis = (req, res, next) => {
   movieModel.find({})
@@ -55,7 +56,7 @@ const createMovei = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.kind === 'ObjectId' || err.kind === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные'));
+        next(new BadRequestError(errorMessages.badRequest));
       } else {
         next(err);
       }
@@ -67,17 +68,17 @@ const deleteMovieById = (req, res, next) => {
   movieModel.findById(movieId).select('+owner')
     .then((movie) => {
       if (!movie) {
-        throw new NotFoundError('Фильм не найден');
+        throw new NotFoundError(errorMessages.notFoundFilm);
       }
       if (movie.owner.toString() !== req.user._id) {
-        throw new Forbidden('Недостаточно прав');
+        throw new Forbidden(errorMessages.notAllow);
       }
       movieModel.findByIdAndRemove(movieId)
         .then((data) => res.status(200).send(data));
     })
     .catch((err) => {
       if (err.kind === 'ObjectId' || err.kind === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные'));
+        next(new BadRequestError(errorMessages.badRequest));
       } else {
         next(err);
       }

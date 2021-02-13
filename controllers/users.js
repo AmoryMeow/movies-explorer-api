@@ -5,6 +5,7 @@ const userModel = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const ConflictErr = require('../errors/conflict-err');
+const { errorMessages } = require('../constants');
 
 const { JWT_SECRET } = require('../config');
 
@@ -19,12 +20,12 @@ const getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
   userModel.findById(userId)
     .orFail(() => {
-      throw new NotFoundError('Пользователь не найден');
+      throw new NotFoundError(errorMessages.notFoundUser);
     })
     .then((data) => res.status(200).send(data))
     .catch((err) => {
       if (err.kind === 'ObjectId' || err.kind === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные'));
+        next(new BadRequestError(errorMessages.badRequest));
       } else {
         next(err);
       }
@@ -36,16 +37,16 @@ const updateCurrentUser = (req, res, next) => {
   const userId = req.user._id;
   const { email, name } = req.body;
   if (!email || !name) {
-    throw new BadRequestError('Переданы некорректные данные');
+    throw new BadRequestError(errorMessages.badRequest);
   }
   userModel.findByIdAndUpdate(userId, { email, name }, { new: true })
     .orFail(() => {
-      throw new NotFoundError('Пользователь не найден');
+      throw new NotFoundError(errorMessages.notFoundUser);
     })
     .then((data) => res.status(200).send(data))
     .catch((err) => {
       if (err.kind === 'ObjectId' || err.kind === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные'));
+        next(new BadRequestError(errorMessages.badRequest));
       } else {
         next(err);
       }
@@ -59,7 +60,7 @@ const createUser = (req, res, next) => {
   } = req.body;
 
   if (!email || !password || !name) {
-    throw new BadRequestError('Переданы некорректные данные');
+    throw new BadRequestError(errorMessages.badRequest);
   }
 
   bcrypt.hash(password, 10)
@@ -70,10 +71,10 @@ const createUser = (req, res, next) => {
         })
         .catch((err) => {
           if (err.name === 'MongoError' && err.code === 11000) {
-            throw new ConflictErr('Пользователь с указанным email уже существует');
+            throw new ConflictErr(errorMessages.notAllowEmail);
           }
           if (err.kind === 'ObjectId' || err.kind === 'CastError') {
-            throw new BadRequestError('Переданы некорректные данные');
+            throw new BadRequestError(errorMessages.badRequest);
           } else {
             next(err);
           }
