@@ -44,4 +44,21 @@ const checkMovieId = celebrate({
   }),
 });
 
-module.exports = { checkMovieId, checkBodyMovie };
+const checkBodyUser = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'string.min': 'Длина поля name должна быть больше 2 символов',
+        'string.max': 'Длина поля name должна быть менее 30 символов',
+        'any.required': 'Поле name должно быть заполнено',
+      }),
+    email: Joi.string().required().custom((value, helpers) => {
+      if (validator.isEmail(value)) {
+        return value;
+      }
+      return helpers.message('Некорректный email');
+    }),
+  }),
+});
+
+module.exports = { checkMovieId, checkBodyMovie, checkBodyUser };
