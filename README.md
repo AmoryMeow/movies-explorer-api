@@ -6,6 +6,7 @@ API дипломного проекта сервиса поиска фильмо
 * домен - api.katanova-movies.students.nomoredomains.icu/ 
 * фронтенд - katanova-movies.students.nomoredomains.icu/ 
 * Публичный IP - 178.154.233.74 
+* БД - mongodb://localhost:27017/moviedb 
 
 ## Запуск проекта
 
