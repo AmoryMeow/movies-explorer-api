@@ -3,9 +3,9 @@
 ## Описание
 
 API дипломного проекта сервиса поиска фильмов. 
-домен - api.katanova-movies.students.nomoredomains.icu/ 
-фронтенд - katanova-movies.students.nomoredomains.icu/ 
-Публичный IP - 178.154.233.74 
+* домен - api.katanova-movies.students.nomoredomains.icu/ 
+* фронтенд - katanova-movies.students.nomoredomains.icu/ 
+* Публичный IP - 178.154.233.74 
 
 ## Запуск проекта
 
