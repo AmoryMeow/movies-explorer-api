@@ -45,6 +45,9 @@ const updateCurrentUser = (req, res, next) => {
     })
     .then((data) => res.status(200).send(data))
     .catch((err) => {
+      if (err.name === 'MongoError' && err.code === 11000) {
+        next(new ConflictErr(errorMessages.notAllowEmail));
+      }
       if (err.kind === 'ObjectId' || err.kind === 'CastError') {
         next(new BadRequestError(errorMessages.badRequest));
       } else {
