@@ -6,7 +6,8 @@ const BadRequestError = require('../errors/bad-request-err');
 const { errorMessages } = require('../constants');
 
 const getMoveis = (req, res, next) => {
-  movieModel.find({})
+  const owner = req.user._id;
+  movieModel.find({ owner })
     .then((data) => res.status(200).send(data))
     .catch(next);
 };
