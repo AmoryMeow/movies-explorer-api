@@ -54,6 +54,7 @@ const createMovei = (req, res, next) => {
       movieId: movie.movieId,
       nameRU: movie.nameRU,
       nameEN: movie.nameEN,
+      _id: movie._id,
     }))
     .catch((err) => {
       if (err.kind === 'ObjectId' || err.kind === 'CastError') {
